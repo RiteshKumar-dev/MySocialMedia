@@ -98,7 +98,7 @@ export default function Header() {
         <Link href={'/login'}>
           <Button className="rounded-lg font-bold flex items-center gap-2 px-2 sm:px-4">
             <IconAuth2fa className="h-5 w-5" />
-            <span className="">Login</span>
+            <span className="hidden md:flex">Login</span>
           </Button>
         </Link>
       )}
