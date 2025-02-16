@@ -1,0 +1,9 @@
+export const signup = `/api/auth/signup`;
+export const login = `/api/auth/login`;
+export const verifyOtp = `/api/auth/verify-otp`;
+export const resendOtp = `/api/auth/resend-otp`;
+export const logout = `/api/auth/logout`;
+export const profile = `/api/user/profile`;
+export const isAuthenticated = `/api/auth/isAuthenticated`;
+export const updateProfile = `/api/user/update-account`;
+export const allPosts = `/api/posts/getAllPosts`;

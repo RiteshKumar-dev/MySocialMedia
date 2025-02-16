@@ -1,0 +1,8 @@
+{
+  "extends": ["next/core-web-vitals", "plugin:prettier/recommended"],
+  "rules": {
+    "prettier/prettier": "error",
+    "no-console": "warn",
+    "react/jsx-curly-brace-presence": ["error", { "props": "always", "children": "never" }]
+  }
+}

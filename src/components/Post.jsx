@@ -1,0 +1,133 @@
+'use client';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+
+import { Trash2, MapPin, Earth } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import Image from 'next/image';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { useRouter } from 'next/navigation';
+import useUserStore from '../../store/user/userStore';
+import { PostOptions } from './PostOptions';
+import toast from 'react-hot-toast';
+import { formatDistanceToNow } from 'date-fns';
+import { useState } from 'react';
+import axios from 'axios';
+
+export function Post({ post }) {
+  const [expanded, setExpanded] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const { user, refreshData } = useUserStore();
+  const router = useRouter();
+  const isAuthor = user?._id === post.user._id;
+  const MAX_LENGTH = 180; // Adjust this value as needed
+  const handlePostDelete = async (postId) => {
+    try {
+      const response = await axios.delete(`/api/posts/${postId}/delete`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.statusText === 'OK') throw new Error('Failed to delete the post.');
+      toast.success('Post deleted successfully!');
+      refreshData();
+    } catch (error) {
+      toast.error(error.message || 'Something went wrong while deleting the post.');
+    } finally {
+      setShowDeleteDialog(false);
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-md border p-4 mb-4">
+      {/* Header Section */}
+      <div className="flex items-start space-x-3">
+        {/* User Avatar */}
+        <Avatar className="w-12 h-12">
+          <AvatarImage src={post.user.avatar} />
+          <AvatarFallback>
+            {post.user.firstname?.charAt(0)}
+            {post.user.lastname?.charAt(0)}
+          </AvatarFallback>
+        </Avatar>
+
+        {/* User Info */}
+        <div className="flex-1">
+          <p className="font-semibold text-gray-900 flex items-center">
+            {post.user.firstname} {post.user.lastname}
+            {isAuthor && <Badge className="ml-2 bg-blue-100 text-blue-600">Author</Badge>}
+          </p>
+          {/* <p className="text-sm text-gray-500">
+            @{post.user.firstname}-{post.user._id.toString().slice(-4)}
+          </p> */}
+          <p className="text-sm text-gray-500 tracking-tighter">{post.user.profession}</p>
+          <p className="text-xs text-gray-400 flex gap-1">
+            {formatDistanceToNow(new Date(post.createdAt))}
+            <Earth className="" size={16} />
+          </p>
+        </div>
+
+        {/* Delete Button (Only for Author) */}
+        {isAuthor && (
+          <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-gray-500 hover:bg-gray-100 p-2">
+                <Trash2 size={18} className="text-red-500" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>This action cannot be undone. Do you really want to delete this post?</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    handlePostDelete(post._id);
+                  }}
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
+      </div>
+
+      {/* Post Content */}
+      <div
+        className="mt-3"
+        style={{ whiteSpace: 'pre-wrap' }} // Preserve spaces and line breaks
+      >
+        <p className="text-gray-800 tracking-tighter">
+          {expanded || post.text.length <= MAX_LENGTH ? post.text : `${post.text.slice(0, MAX_LENGTH)}...`}
+          {post.text.length > MAX_LENGTH && (
+            <button onClick={() => setExpanded(!expanded)} className="text-blue-500 text-sm font-semibold hover:underline">
+              {expanded ? '' : 'more'}
+            </button>
+          )}
+        </p>
+        {/* Post Image (if available) */}
+        {post.imageUrl && (
+          <div className="mt-3">
+            <Image src={post.imageUrl} alt="Post Image" width={500} height={300} priority className="w-full rounded-lg shadow-sm" />
+          </div>
+        )}
+      </div>
+      {/* Post Actions */}
+      <PostOptions postId={post._id} post={post} />
+    </div>
+  );
+}
