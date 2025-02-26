@@ -29,7 +29,7 @@ export const IsVerified = () => {
           <ShieldX size={18} className="text-red-600" />
           <span className="text-xs sm:text-sm">
             Your account is not verified. Please verify to access all features.
-            <Link href="/verify-otp" className="text-blue-400 font-medium hover:underline ml-1">
+            <Link href="/otp" className="text-blue-400 font-medium hover:underline ml-1">
               Verify
             </Link>
           </span>

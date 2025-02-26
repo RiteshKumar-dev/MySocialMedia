@@ -118,7 +118,7 @@ userSchema.methods.updateLastActive = async function () {
 userSchema.methods.generateOTP = async function () {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   this.verifyCode = crypto.createHash('sha256').update(otp).digest('hex');
-  this.verifyCodeExpiry = Date.now() + 5 * 60 * 1000; // 5 minutes expiry
+  this.verifyCodeExpiry = Date.now() + 60 * 1000; // 1 minutes expiry
   await this.save();
   return otp;
 };

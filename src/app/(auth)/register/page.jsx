@@ -45,7 +45,7 @@ export default function Signup() {
       toast.success('Signup successfully.');
       // console.log('Signup Response:', res.data);
       localStorage.setItem('tempEmail', formData.email);
-      router.push(`/otp`);
+      router.push(`/login`);
     } catch (error) {
       console.error('Signup Error:', error.response ? error.response.data : error.message);
     }

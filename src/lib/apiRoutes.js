@@ -1,5 +1,6 @@
 export const signup = `/api/auth/signup`;
 export const login = `/api/auth/login`;
+export const verifyOtprequest = `/api/auth/verify-request`;
 export const verifyOtp = `/api/auth/verify-otp`;
 export const resendOtp = `/api/auth/resend-otp`;
 export const logout = `/api/auth/logout`;

@@ -19,6 +19,11 @@ const useUserStore = create((set, get) => ({
       set({ user: null, error: 'Failed to fetch user', loading: false });
     }
   },
+  // Check if user is verified
+  isUserVerified: () => {
+    const user = get().user;
+    return user?.isVerified || false;
+  },
 
   // Fetch all posts
   fetchAllPosts: async () => {

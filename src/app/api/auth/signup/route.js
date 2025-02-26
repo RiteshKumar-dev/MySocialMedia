@@ -19,11 +19,11 @@ export async function POST(req) {
       return NextResponse.json({ error: 'OTP generation method is missing' }, { status: 500 });
     }
     const user = new User({ email, password });
-    const otp = await user.generateOTP();
+    await user.save();
     return NextResponse.json(
       {
         message: 'Signup successful, OTP sent',
-        user: { email, otp },
+        user: { email },
       },
       { status: 201 }
     );
