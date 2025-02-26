@@ -54,14 +54,14 @@ export default function Signup() {
   };
   return (
     <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
-      <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">Welcome to My SocialMedia</h2>
+      <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">Welcome to DEV</h2>
       <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
-        Signup with My SocialMedia if you you don&apos;t have an account.
+        Signup with DEV if you you don&apos;t have an account.
         <br /> If you already have an account,{' '}
         <Link href="/login" className="text-red-500 hover:underline">
           login
         </Link>{' '}
-        to devCommunity
+        to DEV
       </p>
       <form className="my-8" onSubmit={handleSubmit}>
         <LabelInputContainer className="mb-4">

@@ -27,7 +27,8 @@ export async function POST(req) {
 
     const formData = await req.formData();
     const text = formData.get('text');
-    const file = formData.get('image');
+    const file = formData.get('media');
+    const fileType = formData.get('mediaType');
     const userId = formData.get('userId');
     const isArticle = formData.get('isArticle') === 'true'; // Ensure it's treated as a boolean
 
@@ -36,18 +37,28 @@ export async function POST(req) {
     }
 
     let imageUrl = '';
+    let videoUrl = '';
     let imagePublicId = '';
+    let videoPublicId = '';
     if (file) {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
       const result = await uploadFileToCloudinary(buffer, 'mySocialMedia');
-      imageUrl = result.secure_url;
-      imagePublicId = result.public_id;
+      if (fileType === 'image') {
+        imageUrl = result.secure_url;
+        imagePublicId = result.public_id;
+      } else {
+        videoUrl = result.secure_url;
+        videoPublicId = result.public_id;
+      }
     }
     const newEntry = await Post.create({
       user: userId,
       text,
+      mediaType: fileType,
+      videoUrl,
       imageUrl,
+      videoPublicId,
       imagePublicId,
       isArticle: isArticle,
       likes: [],

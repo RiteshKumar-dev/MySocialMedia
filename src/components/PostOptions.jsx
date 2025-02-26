@@ -61,7 +61,7 @@ export function PostOptions({ postId, post }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-900 shadow-sm rounded-lg p-4">
+    <div className="bg-white dark:bg-gray-900 rounded-lg mt-2 md:mt-0 md:p-4">
       {/* Likes & Comments Count */}
       <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 mb-3">
         {totalLikes > 0 && (

@@ -5,8 +5,11 @@ const PostSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     text: { type: String, required: true },
+    mediaType: { type: String },
     imageUrl: { type: String },
     imagePublicId: { type: String }, // Cloudinary Image ID
+    videoUrl: { type: String },
+    videoPublicId: { type: String }, // Cloudinary video ID
     isArticle: { type: Boolean, default: false },
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment', default: [] }],
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],

@@ -7,8 +7,8 @@ import Link from 'next/link';
 export default function NotFound() {
   return (
     <section className="bg-white dark:bg-gray-900 min-h-screen flex flex-col justify-center items-center px-6">
-      <div className="container flex flex-col items-center text-center lg:flex-row lg:items-center lg:gap-12">
-        <div className="w-full lg:w-1/2">
+      <div className="container flex flex-col items-center text-center lg:flex-row lg:items-center">
+        <div className="w-full">
           <p className="text-lg font-medium text-blue-500 dark:text-blue-400">404 error</p>
           <h1 className="mt-3 text-3xl font-bold text-gray-800 dark:text-white md:text-5xl">Oops! Page not found</h1>
           <p className="mt-4 text-gray-500 dark:text-gray-400 md:text-lg">
@@ -36,9 +36,9 @@ export default function NotFound() {
             </Link>
           </div>
         </div>
-        <div className="relative w-full max-w-sm mt-12 lg:w-1/2 lg:mt-0">
-          <Image className="w-full" src="/bgMainImg.png" alt="Not Found Illustration" width={500} height={500} priority />
-        </div>
+        {/* <div className="relative w-full max-w-sm mt-12 lg:w-1/2 lg:mt-0">
+          <Image className="w-full" src="/bgImg.png" alt="Not Found Illustration" width={500} height={500} priority />
+        </div> */}
       </div>
     </section>
   );

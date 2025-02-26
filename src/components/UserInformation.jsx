@@ -38,21 +38,6 @@ export default function UserInformation({ posts }) {
         <p className="text-sm text-gray-800 font-semibold tracking-tighter">{user?.profession}</p>
         <p className="text-sm text-gray-400 font-semibold tracking-tighter">{user?.location || 'Noida, Uttar Pradesh'}</p>
       </div>
-
-      <div className="flex justify-around w-full border-t border-gray-200 bg-gray-50 py-3">
-        <div className="text-center">
-          <p className="text-gray-500 text-xs">Posts</p>
-          <p className="text-black font-bold"> {posts?.filter((post) => post?.user?._id === user._id).length}</p>
-        </div>
-        <div className="text-center">
-          <p className="text-gray-500 text-xs">Followers</p>
-          <p className="text-black font-bold">1.2K</p>
-        </div>
-        <div className="text-center">
-          <p className="text-gray-500 text-xs">Following</p>
-          <p className="text-black font-bold">320</p>
-        </div>
-      </div>
     </div>
   );
 }

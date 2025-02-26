@@ -54,7 +54,7 @@ export const UserAvatar = () => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="p-0 rounded-full">
+          <Button variant="ghost" className="p-0 rounded-full border">
             <Avatar>
               {user?.avatar ? (
                 <AvatarImage src={user.avatar} alt="User Avatar" />

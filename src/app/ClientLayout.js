@@ -7,6 +7,7 @@ import useUserStore from '../../store/user/userStore';
 import { useEffect, useState } from 'react';
 import { Loader } from '@/components/Loader';
 import { IsVerified } from '@/components/IsVerified';
+import CookieConsent from '@/components/CookieConsent';
 
 export default function ClientLayout({ children }) {
   const { fetchUser, isAuthenticated, isauthenticated, fetchAllPosts } = useUserStore();
@@ -50,6 +51,7 @@ export default function ClientLayout({ children }) {
       <div className="bg-[#F0EEF8] flex-1 w-full">
         {/* <div className="fixed md:ml-[184px] right-0"> */}
         <Breadcrumbs />
+        <CookieConsent />
         {/* </div> */}
         <main>{children}</main>
       </div>

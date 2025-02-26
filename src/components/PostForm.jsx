@@ -5,7 +5,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { ImageIcon, Trash2, FileText, Send } from 'lucide-react';
+import { ImageIcon, Trash2, FileText, Send, VideoIcon } from 'lucide-react';
 import useUserStore from '../../store/user/userStore';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
@@ -14,48 +14,52 @@ import { GlobalLoader } from './Loader';
 export default function PostForm() {
   const { user, refreshData } = useUserStore();
   const [postText, setPostText] = useState('');
-  const [image, setImage] = useState(null);
+  // const [image, setImage] = useState(null);
+  const [media, setMedia] = useState(null);
   const [preview, setPreview] = useState(null);
   const [isArticle, setIsArticle] = useState(false);
   const fileInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
-
-  const isDataHere = !postText.trim() || !image;
-
-  const handleImageChange = (e) => {
+  const isDataHere = !postText.trim() && !media;
+  const handleMediaChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(file);
+      setMedia(file);
       setPreview(URL.createObjectURL(file));
     }
   };
 
-  const removeImage = () => {
+  const removeMedia = () => {
     setPreview(null);
-    setImage(null);
+    setMedia(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = ''; // Reset file input
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!postText.trim() || !image) {
-      toast.error('Post content or image is required!');
+    if (!postText.trim() && !media) {
+      toast.error('Post content or media is required!');
       return;
     } else if (postText.trim() && (postText.length < 10 || postText.length > 2000)) {
-      toast.error('Post content must be between 10 and 500 characters!');
+      toast.error('Post content must be between 10 and 2000 characters!');
       return;
     }
 
-    if (image) {
-      const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
-      if (!validImageTypes.includes(image.type)) {
-        toast.error('Only JPG, PNG, and WEBP images are allowed!');
+    if (media && !postText.trim()) {
+      toast.error('Text is required when uploading media!');
+      return;
+    }
+
+    if (media) {
+      const validMediaTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'video/mp4', 'video/webm'];
+      if (!validMediaTypes.includes(media.type)) {
+        toast.error('Only JPG, PNG, WEBP images, and MP4, WEBM videos are allowed!');
         return;
       }
-      if (image.size > 5 * 1024 * 1024) {
-        toast.error('Image size should not exceed 5MB!');
+      if (media.size > 20 * 1024 * 1024) {
+        // 20MB size limit for media
+        toast.error('Media size should not exceed 20MB!');
         return;
       }
     }
@@ -64,8 +68,9 @@ export default function PostForm() {
     formData.append('text', postText);
     formData.append('isArticle', isArticle);
     formData.append('userId', user?._id);
-    if (image) {
-      formData.append('image', image);
+    if (media) {
+      formData.append('media', media);
+      formData.append('mediaType', media.type.split('/')[0]);
     }
 
     try {
@@ -77,7 +82,7 @@ export default function PostForm() {
       toast.dismiss();
       toast.success('Post created successfully!');
       setPostText('');
-      removeImage();
+      removeMedia();
       refreshData();
       <GlobalLoader />;
     } catch (error) {
@@ -125,14 +130,18 @@ export default function PostForm() {
               </div>
             </div>
 
-            {/* Image Preview */}
+            {/* Media Preview */}
             {preview && (
               <div className="relative mt-2">
-                <img src={preview} alt="Preview" className="w-full rounded-lg shadow-md object-cover" />
+                {media.type.startsWith('video/') ? (
+                  <video src={preview} controls className="w-full rounded-lg shadow-md"></video>
+                ) : (
+                  <img src={preview} alt="Preview" className="w-full rounded-lg shadow-md object-cover" />
+                )}
                 <Trash2
                   size={18}
                   className="text-red-500 absolute top-2 right-2 cursor-pointer font-bold bg-white rounded-full p-1"
-                  onClick={removeImage}
+                  onClick={removeMedia}
                 />
               </div>
             )}
@@ -170,7 +179,7 @@ export default function PostForm() {
             </div>
 
             {/* Hidden File Input */}
-            <input type="file" ref={fileInputRef} hidden accept="image/*" onChange={handleImageChange} />
+            <input type="file" ref={fileInputRef} hidden accept="image/*,video/*" onChange={handleMediaChange} />
           </form>
         </div>
       )}

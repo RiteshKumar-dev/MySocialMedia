@@ -3,12 +3,10 @@ import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
-import { Briefcase, HomeIcon, MailOpen, MessagesSquare, Search, Users } from 'lucide-react';
+import { Briefcase, HomeIcon, MailOpen, MessagesSquare, Search, User, Users } from 'lucide-react';
 import { UserAvatar } from './UserAvatar';
 import { Button } from './ui/button';
 import useUserStore from '../../store/user/userStore';
-import { IconAuth2fa } from '@tabler/icons-react';
-
 export default function Header() {
   const { user, isauthenticated } = useUserStore();
   const [searchTerm, setSearchTerm] = useState('');
@@ -58,11 +56,11 @@ export default function Header() {
           <input
             type="text"
             placeholder="Search users..."
-            className="bg-transparent flex-1 outline-none"
+            className="bg-transparent flex-1 outline-none w-full"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onFocus={() => setShowDropdown(true)}
-            onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // Close dropdown with delay
+            onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
           />
         </form>
 
@@ -97,7 +95,7 @@ export default function Header() {
       ) : (
         <Link href={'/login'}>
           <Button className="rounded-lg font-bold flex items-center gap-2 px-2 sm:px-4">
-            <IconAuth2fa className="h-5 w-5" />
+            <User className="h-5 w-5" />
             <span className="hidden md:flex">Login</span>
           </Button>
         </Link>

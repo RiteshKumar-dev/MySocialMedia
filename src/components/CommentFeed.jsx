@@ -22,16 +22,15 @@ import { useState } from 'react';
 function CommentFeed({ post }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { user, refreshData } = useUserStore();
+
   const handleCommentDelete = async (commentId) => {
     try {
       const response = await axios.delete(`/api/posts/${post._id}/comments`, {
         data: { commentId },
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
       });
-      console.log(response);
-      if (!response.statusText === 'OK') throw new Error('Failed to delete the comment.');
+
+      if (response.status !== 200) throw new Error('Failed to delete the comment.');
       toast.success('Comment deleted successfully!');
       refreshData();
     } catch (error) {
@@ -42,72 +41,72 @@ function CommentFeed({ post }) {
   };
 
   return (
-    <div className="mt-4 space-y-3">
-      {post?.comments?.map((comment) => {
-        // ✅ Each comment will check its own author
+    <div className="mt-4 space-y-4">
+      {post?.comments?.map((comment, index) => {
         const isAuthor = comment.user.userId === user?._id;
 
         return (
-          <div key={comment._id} className="flex items-start justify-center space-x-3">
-            {/* User Avatar */}
-            <Avatar className="w-9 h-9">
-              <AvatarImage src={comment.user.avatar} />
-              <AvatarFallback>
-                {comment.user.firstname?.charAt(0)}
-                {comment.user.lastname?.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
+          <div key={comment._id} className="w-full max-w-2xl">
+            <div className="flex items-start space-x-4 p-3 bg-white dark:bg-gray-800 rounded-lg">
+              {/* User Avatar */}
+              <Avatar className="w-10 h-10">
+                <AvatarImage src={comment.user.avatar} />
+                <AvatarFallback className="bg-gray-300 dark:bg-gray-700">
+                  {comment.user.firstname?.charAt(0)}
+                  {comment.user.lastname?.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
 
-            {/* Comment Box */}
-            <div className="p-3 rounded-lg w-full max-w-lg shadow-sm">
-              <div className="flex justify-between items-center">
-                {/* User Info */}
-                <div>
-                  <p className="font-semibold text-sm text-gray-900 dark:text-gray-100">
-                    {comment.user.firstname} {comment.user.lastname}
-                  </p>
-                  {/* <p className="text-xs text-gray-500">
-                    @{comment.user.firstname.toLowerCase()}
-                    {comment.user.lastname.toLowerCase()}-{comment.user.userId.toString().slice(-4)}
-                  </p> */}
-                  <p className="text-xs text-gray-500">{post?.user?.bio ? post.user.bio.slice(0, 45) + '...' : ''}</p>
+              {/* Comment Content */}
+              <div className="flex-1">
+                <div className="flex justify-between items-center">
+                  {/* User Info */}
+                  <div>
+                    <p className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+                      {comment.user.firstname} {comment.user.lastname}
+                    </p>
+                    <p className="text-xs text-gray-500">{post?.user?.bio ? post.user.bio.slice(0, 45) + '...' : ''}</p>
+                  </div>
+
+                  {/* Time & Visibility Icon */}
+                  <div className="flex flex-wrap items-center gap-x-1 text-gray-500 text-xs min-w-0">
+                    <span className="truncate">{formatDistanceToNow(new Date(comment.createdAt))} ago</span>
+                    <Earth size={14} className="shrink-0" />
+                  </div>
                 </div>
 
-                {/* Time & Visibility Icon */}
-                <div className="flex items-center space-x-1 text-gray-500 text-xs">
-                  <span>{formatDistanceToNow(new Date(comment.createdAt))} ago</span>
-                  <Earth size={14} />
-                </div>
+                {/* Comment Text */}
+                <p className="mt-2 text-sm text-gray-800 dark:text-gray-300 leading-relaxed">{comment.text}</p>
+
+                {/* Delete Button (Only for Comment Author) */}
+                {isAuthor && (
+                  <div className="flex justify-end mt-2">
+                    <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="ghost" size="icon" className="text-red-500 p-2 transition-all">
+                          <Trash2 size={18} />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="bg-white dark:bg-gray-900 shadow-lg opacity-100">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. Do you really want to delete this comment?
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => handleCommentDelete(comment._id)}>Delete</AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                )}
               </div>
-
-              {/* Comment Text */}
-              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{comment.text}</p>
-
-              {/* ✅ Delete Button (Only for Comment Author) */}
-              {isAuthor && (
-                <div className="flex justify-end items-end">
-                  <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="ghost" size="icon" className="text-gray-500 hover:bg-gray-100 p-2">
-                        <Trash2 size={18} className="text-red-500" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This action cannot be undone. Do you really want to delete this comment?
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleCommentDelete(comment._id)}>Delete</AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              )}
             </div>
+
+            {/* Underline after each comment except the last one */}
+            {index !== post.comments.length - 1 && <hr className="border-t border-gray-300 dark:border-gray-700 mt-3 w-4/5 mx-auto" />}
           </div>
         );
       })}

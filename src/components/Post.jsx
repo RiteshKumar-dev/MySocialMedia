@@ -21,7 +21,7 @@ import useUserStore from '../../store/user/userStore';
 import { PostOptions } from './PostOptions';
 import toast from 'react-hot-toast';
 import { formatDistanceToNow } from 'date-fns';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 export function Post({ post }) {
@@ -29,8 +29,23 @@ export function Post({ post }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { user, refreshData } = useUserStore();
   const router = useRouter();
+  const [expandedProfession, setExpandedProfession] = useState(false);
   const isAuthor = user?._id === post.user._id;
-  const MAX_LENGTH = 180; // Adjust this value as needed
+  const MAX_LENGTH = 180;
+  const MAX_LENGTH_PROFESSION = 50;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
   const handlePostDelete = async (postId) => {
     try {
       const response = await axios.delete(`/api/posts/${postId}/delete`, {
@@ -49,11 +64,22 @@ export function Post({ post }) {
     }
   };
 
+  const colorizeHashtags = (text) => {
+    const parts = text.split(/(#\w+)/g);
+    return parts.map((part, index) =>
+      part.startsWith('#') ? (
+        <span key={index} className="text-blue-500 hover:underline cursor-pointer">
+          {part}{' '}
+        </span>
+      ) : (
+        part
+      )
+    );
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md border p-4 mb-4">
-      {/* Header Section */}
       <div className="flex items-start space-x-3">
-        {/* User Avatar */}
         <Avatar className="w-12 h-12">
           <AvatarImage src={post.user.avatar} />
           <AvatarFallback>
@@ -62,23 +88,32 @@ export function Post({ post }) {
           </AvatarFallback>
         </Avatar>
 
-        {/* User Info */}
         <div className="flex-1">
           <p className="font-semibold text-gray-900 flex items-center">
             {post.user.firstname} {post.user.lastname}
             {isAuthor && <Badge className="ml-2 bg-blue-100 text-blue-600">Author</Badge>}
           </p>
-          {/* <p className="text-sm text-gray-500">
-            @{post.user.firstname}-{post.user._id.toString().slice(-4)}
-          </p> */}
-          <p className="text-sm text-gray-500 tracking-tighter">{post.user.profession}</p>
+          <p className="text-sm text-gray-500 tracking-tighter">
+            {isMobile
+              ? expandedProfession || post.user.profession.length <= MAX_LENGTH_PROFESSION
+                ? post.user.profession
+                : `${post.user.profession.slice(0, MAX_LENGTH_PROFESSION)}...`
+              : post.user.profession}
+            {isMobile && post.user.profession.length > MAX_LENGTH_PROFESSION && (
+              <button
+                onClick={() => setExpandedProfession(!expandedProfession)}
+                className="text-blue-500 text-sm font-semibold hover:underline"
+              >
+                {expandedProfession ? '' : 'more'}
+              </button>
+            )}
+          </p>
           <p className="text-xs text-gray-400 flex gap-1">
             {formatDistanceToNow(new Date(post.createdAt))}
             <Earth className="" size={16} />
           </p>
         </div>
 
-        {/* Delete Button (Only for Author) */}
         {isAuthor && (
           <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
             <AlertDialogTrigger asChild>
@@ -93,40 +128,41 @@ export function Post({ post }) {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => {
-                    handlePostDelete(post._id);
-                  }}
-                >
-                  Delete
-                </AlertDialogAction>
+                <AlertDialogAction onClick={() => handlePostDelete(post._id)}>Delete</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         )}
       </div>
 
-      {/* Post Content */}
-      <div
-        className="mt-3"
-        style={{ whiteSpace: 'pre-wrap' }} // Preserve spaces and line breaks
-      >
+      <div className="mt-3" style={{ whiteSpace: 'pre-wrap' }}>
         <p className="text-gray-800 tracking-tighter">
-          {expanded || post.text.length <= MAX_LENGTH ? post.text : `${post.text.slice(0, MAX_LENGTH)}...`}
+          {expanded || post.text.length <= MAX_LENGTH
+            ? colorizeHashtags(post.text)
+            : colorizeHashtags(`${post.text.slice(0, MAX_LENGTH)}...`)}
           {post.text.length > MAX_LENGTH && (
             <button onClick={() => setExpanded(!expanded)} className="text-blue-500 text-sm font-semibold hover:underline">
               {expanded ? '' : 'more'}
             </button>
           )}
         </p>
-        {/* Post Image (if available) */}
-        {post.imageUrl && (
+        {post?.mediaType && (
           <div className="mt-3">
-            <Image src={post.imageUrl} alt="Post Image" width={500} height={300} priority className="w-full rounded-lg shadow-sm" />
+            {post?.mediaType?.startsWith('video') ? (
+              <video src={post?.videoUrl} controls loop muted priority className="w-full h-[500px] object-fit rounded-lg"></video>
+            ) : (
+              <Image
+                src={post?.imageUrl}
+                alt="Post Media"
+                width={500}
+                height={500}
+                priority
+                className="w-full h-[500px] object-fit rounded-lg"
+              />
+            )}
           </div>
         )}
       </div>
-      {/* Post Actions */}
       <PostOptions postId={post._id} post={post} />
     </div>
   );
