@@ -46,7 +46,7 @@ export default function OTP() {
   const handleRequestOTP = async () => {
     const email = localStorage?.getItem('tempEmail');
     if (!email) {
-      toast.error('Email not found in local storage');
+      toast.error('Email not found');
       return;
     }
     setLoading(true);
