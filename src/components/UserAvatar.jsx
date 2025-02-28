@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/alert-dialog';
 
 export const UserAvatar = () => {
-  const { logout, user } = useUserStore();
+  const { logout, user, deleteAccount } = useUserStore();
   const router = useRouter();
   const [actionType, setActionType] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -32,8 +32,7 @@ export const UserAvatar = () => {
         toast.success('Logged out successfully!');
         router.push('/login');
       } else if (actionType === 'delete') {
-        // Add delete profile API logic here
-        console.log('Deleting profile...');
+        deleteAccount();
         toast.success('Profile deleted successfully!');
         router.push('/register');
       }

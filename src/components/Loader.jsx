@@ -33,7 +33,7 @@ export function Loader() {
 // Global Minimal Loader
 export function GlobalLoader() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#F0EEF6] px-4">
+    <div className="flex flex-col items-center justify-center bg-[#F0EEF6] px-4">
       <Loader2 className="w-12 h-12 text-green-400 animate-spin mt-6" />
     </div>
   );

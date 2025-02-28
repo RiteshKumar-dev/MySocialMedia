@@ -15,7 +15,7 @@
 } */
 
 body {
-  font-family: serif;
+  font-family: 'Playfair Display', serif;
 }
 
 @layer base {
@@ -130,8 +130,6 @@ body {
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -139,4 +137,33 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+/* Apply to the entire website */
+* {
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #888 #f1f1f1; /* Handle and track color */
+}
+
+/* Custom Scrollbar for WebKit Browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px; /* Width of scrollbar */
+  height: 10px; /* Height for horizontal scrollbars */
+  border-radius: 10px; /* Rounded edges */
+}
+
+/* Scrollbar Track (Background) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Light background */
+  border-radius: 10px;
+}
+
+/* Scrollbar Handle (Thumb) */
+::-webkit-scrollbar-thumb {
+  background: #888; /* Scrollbar color */
+  border-radius: 10px; /* Makes the scrollbar handle rounded */
+}
+
+/* Scrollbar Handle on Hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Darker color on hover */
 }

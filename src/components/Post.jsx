@@ -11,7 +11,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 
-import { Trash2, MapPin, Earth } from 'lucide-react';
+import { Trash2, MapPin, Earth, User2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import Image from 'next/image';
 import { Button } from './ui/button';
@@ -23,6 +23,7 @@ import toast from 'react-hot-toast';
 import { formatDistanceToNow } from 'date-fns';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FollowButton } from './FollowButton ';
 
 export function Post({ post }) {
   const [expanded, setExpanded] = useState(false);
@@ -114,7 +115,7 @@ export function Post({ post }) {
           </p>
         </div>
 
-        {isAuthor && (
+        {isAuthor ? (
           <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
             <AlertDialogTrigger asChild>
               <Button variant="ghost" size="icon" className="text-gray-500 hover:bg-gray-100 p-2">
@@ -132,6 +133,8 @@ export function Post({ post }) {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+        ) : (
+          <FollowButton isFollowing={false} onFollowToggle={() => console.log('')} />
         )}
       </div>
 
