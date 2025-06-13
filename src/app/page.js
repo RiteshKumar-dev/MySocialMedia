@@ -6,6 +6,7 @@ import { PostFeed } from '@/components/PostFeed';
 import UserPostInformation from '@/components/UserPostInformation';
 import { Widget } from '@/components/Widget';
 import { Tooltip } from '@/components/Tooltip';
+import UsersStatusClips from '@/components/UsersStatusClips';
 export default function Home() {
   const { isauthenticated, posts } = useUserStore();
   if (!isauthenticated) {
@@ -30,6 +31,7 @@ export default function Home() {
       </section>
       <section className="col-span-full md:col-span-6 xl:col-span-4 xl:max-w-xl mx-auto w-full space-y-4">
         <PostForm />
+        <UsersStatusClips />
         <PostFeed posts={posts} />
       </section>
       <section className="hidden md:flex md:flex-col md:col-span-2 space-y-4">
