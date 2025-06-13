@@ -21,7 +21,7 @@ export function Loader() {
       </div> */}
       <div className="flex items-center gap-2">
         <Button className="rounded-lg font-bold">
-          DEV <Loader2 size={28} className="animate-spin" />
+          VibeSphere <Loader2 size={28} className="animate-spin" />
         </Button>
       </div>
       {/* <Progress value={progress} className="w-3/4 max-w-sm h-2 rounded-lg bg-gray-200 dark:bg-gray-700" /> */}

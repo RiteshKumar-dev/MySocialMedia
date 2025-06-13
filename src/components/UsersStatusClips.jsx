@@ -10,7 +10,7 @@ export default function UsersStatusClips() {
   const [visible, setVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const statusImgs = ['/status1.png', '/stats2.jpg', '/stats3.jpg', '/stats4.png', '/stst5.jpg'];
+  const statusImgs = ['/status1.png', '/sta1.webp', '/sta2.avif', '/sta3.png', '/status1.png'];
 
   useEffect(() => {
     getAllUsers();
@@ -48,11 +48,7 @@ export default function UsersStatusClips() {
             }}
             className="cursor-pointer w-16 h-16 rounded-full border-4 border-purple-300 shadow-md overflow-hidden"
           >
-            <img
-              src={user.avatar || `https://source.unsplash.com/random/100x100?sig=${user._id}`}
-              alt={user.firstname}
-              className="w-full h-full object-cover"
-            />
+            <img src={user.avatar || `/user6.webp`} alt={user.firstname} className="w-full h-full object-cover" />
           </div>
         ))}
       </div>
@@ -71,7 +67,7 @@ export default function UsersStatusClips() {
               <img
                 src={statusImgs[currentIndex]}
                 alt="Status"
-                className="w-full h-[500px] object-cover object-center transition duration-500 ease-in-out"
+                className="w-full h-[500px] object-cover transition duration-500 ease-in-out"
               />
 
               {/* Header */}
@@ -83,10 +79,36 @@ export default function UsersStatusClips() {
                     setSelectedUser(null);
                     setCurrentIndex(0);
                   }}
-                  className="text-white hover:text-red-500 transition"
+                  className="text-white hover:text-red-500 transition bg-gray-300 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-400"
                 >
                   ✕
                 </button>
+              </div>
+              {/* Comment Input */}
+              <div className="absolute bottom-0 left-0 right-0 px-4 py-3">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Add a comment..."
+                    className="w-full px-4 py-2 pr-10 rounded-full border border-gray-300 dark:border-zinc-600 bg-gray-100 dark:bg-zinc-700 text-sm outline-none focus:ring-2 focus:ring-purple-400"
+                  />
+                  <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-purple-600 hover:text-purple-800 transition">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M14.752 11.168l-9.596-4.796a1 1 0 00-1.44.894v10.468a1 1 0 001.44.894l9.596-4.796a1 1 0 000-1.788z"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
 
               {/* Animated Progress Bar */}

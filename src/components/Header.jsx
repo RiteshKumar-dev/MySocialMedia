@@ -15,6 +15,8 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
 
+  // if (!isauthenticated || !user) return null;
+
   // Mock user data (Replace this with an API call)
   const mockUsers = ['John Doe', 'Jane Smith', 'Alex Johnson', 'Emily Davis', 'Michael Brown'];
 
@@ -47,7 +49,7 @@ export default function Header() {
   return (
     <div className="flex items-center p-2 max-w-6xl mx-auto">
       {/* Logo */}
-      <div className="rounded-lg bg-black text-white font-bold p-2">DEV</div>
+      <div className="rounded-lg bg-black text-white font-bold p-2">VibeSphere</div>
 
       {/* Search */}
       <div className="flex-1 relative">
